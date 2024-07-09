@@ -28,7 +28,7 @@ async def get_seguimientoById(id):
     return get_seguimiento_byid
 
 # POST
-@router.post("/", tags=["Seguimiento"])
+@router.post("/seguimiento", tags=["Seguimiento"])
 async def post_seguimiento(seguimiento: Seguimiento):
     collection_name.insert_one(dict(seguimiento))
 
