@@ -1,7 +1,8 @@
 from fastapi import FastAPI
-from routes.route import router
-from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from routes.route_seguimiento import seguimiento
+from routes.route_status import status
+
 
 app = FastAPI()
 
@@ -9,7 +10,7 @@ origins = [
     "http://localhost.tiangolo.com",
     "https://localhost.tiangolo.com",
     "http://localhost",
-    "http://localhost:8080",
+    "http://localhost:8000",
 ]
 
 app.add_middleware(
@@ -20,4 +21,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(router)
+app.include_router(status)
+app.include_router(seguimiento)
