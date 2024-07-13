@@ -1,7 +1,9 @@
+
+
 # Schema Seguimiento
 def individual_seguimiento(seguimiento) -> dict:
     return {
-        "id": str(seguimiento["_id"]),
+        "id": str(seguimiento["id"]),
         "initial_date": seguimiento["initial_date"],
         "product_deadline": seguimiento["product_deadline"],
         "user_name": seguimiento["user_name"],
@@ -17,7 +19,7 @@ def list_seguimiento(seguimientos) -> list:
 # Schema Status
 def individual_status(status) -> dict:
     return {
-        "id": str(status["_id"]),
+        "id": str(status["id"]),
         "product_status": status["product_status"],
     }
 
@@ -27,7 +29,7 @@ def list_status(statuses) -> list:
 # Schema Status By Date Time
 def status_byDateTime(status) -> dict:
     return {
-        "id": str(status["_id"]),
+        "id": str(status["id"]),
         "product_status": status["product_status"],
         "status_datetime": status["status_datetime"]
     }
