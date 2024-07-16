@@ -8,13 +8,22 @@ const FormSeguimiento = () => {
     const dispatch = useDispatch()
     const { register, handleSubmit } = useForm()
 
+    // Función encargada de enviar los datos ingresados en el formulario al backend
     const submitSeguimiento = handleSubmit(async (values) => {
+
+        values.id = ""
+
+        // Uso de la función creada en status.js 
         const res = await createSeguimientoRequest(values)
+
+        // Uso del reducer addSeguimiento proveniente de seguimientoSlice.js
+        // Envío del contenido de la respuesta 
         dispatch(addSeguimiento(res))
     })
     
     return (
         <>
+            <h1>FORMULARIO CREAR SEGUIMIENTO</h1>
             <form onSubmit={submitSeguimiento}>
                 <input
                     type="text"
