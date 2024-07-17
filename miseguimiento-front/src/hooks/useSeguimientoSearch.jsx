@@ -10,6 +10,8 @@ const useSeguimientoSearch = () => {
 
     const location = useLocation()
     const isInSearchSeguimientoPath = location.pathname === '/search-seguimiento'
+    const isInDeleteSeguimientoPath = location.pathname === '/delete-seguimiento'
+    const isInEditDeadlinePath = location.pathname === '/edit-deadline'
 
     const [inputValue, setInputValue] = useState('')
     const [showCard, setShowCard] = useState(false)
@@ -21,12 +23,12 @@ const useSeguimientoSearch = () => {
     }
 
     // Función para realizar la búsqueda del seguimiento
-    const handleSearch = () => {
+    const handleSearch = (value) => {
 
-        // Llamada a getSeguimiento solo si el input tiene un valor
-        inputValue &&
-            isInSearchSeguimientoPath ? getSeguimiento(inputValue.trim()) && setShowCard(true)
-            : inputValue && getStatus(inputValue.trim()) && setShowCard(true)
+        // Llamada a getSeguimiento o getStatus solo si el input tiene un valor
+        value &&
+            isInSearchSeguimientoPath || isInDeleteSeguimientoPath || isInEditDeadlinePath ? getSeguimiento(inputValue.trim()) && setShowCard(true)
+            : value && getStatus(inputValue.trim()) && setShowCard(true)
     }
     
     return {

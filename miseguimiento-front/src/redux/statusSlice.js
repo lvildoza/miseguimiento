@@ -5,18 +5,12 @@ const statusSlice = createSlice({
     name: "status",
 
     // Estado inicial vacío para luego realizar acciones
-    initialState: [
-        {
-        id: "",
-        product_status: "",
-        status_datetime: "",
-        },
-    ],
+    initialState: [],
 
     reducers: {
         // reducer que reemplaza el estado actual con el payload de la acción
         getStatusById: (state, action) => {
-        return action.payload;
+        return action.payload
         },
 
         // reducer para modificar el estado del seguimiento de un producto
