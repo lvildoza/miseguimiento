@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routes.route_seguimiento import seguimiento
-from routes.route_status import status
+from routes.route_status import status_router
 
 
 app = FastAPI()
@@ -21,5 +21,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(status)
+app.include_router(status_router)
 app.include_router(seguimiento)

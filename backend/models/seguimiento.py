@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 class Seguimiento(BaseModel):
-    id: str
+    id: str = None
     initial_date: datetime = datetime.now()
     product_deadline: str
     user_name: str
