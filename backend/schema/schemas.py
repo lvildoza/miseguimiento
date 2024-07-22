@@ -1,5 +1,3 @@
-
-
 # Schema Seguimiento
 def individual_seguimiento(seguimiento) -> dict:
     return {

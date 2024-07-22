@@ -6,13 +6,12 @@ from models.seguimiento import SeguimientoDeadLine, Seguimiento
 from schema.schemas import list_seguimiento
 from config.database import collection_name
 from bson import ObjectId
-from datetime import datetime
 
 seguimiento = APIRouter(prefix="/api/v1",
                         tags=["Seguimiento"])
 
+# Función auxiliar para convertir ObjectId a cadena.
 def convert_objectid(obj):
-    """Función auxiliar para convertir ObjectId a cadena."""
     if isinstance(obj, ObjectId):
         return str(obj)
     raise TypeError(f"Type {type(obj)} not serializable")
