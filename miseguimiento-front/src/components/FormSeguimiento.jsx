@@ -1,24 +1,17 @@
+import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
-import { useDispatch } from 'react-redux'
-import { createSeguimientoRequest } from '../services/seguimiento.js'
-import { addSeguimiento } from '../redux/seguimientoSlice.js'
+import { SeguimientoContext } from '../context/Context.jsx'
 
 const FormSeguimiento = () => {
 
-    const dispatch = useDispatch()
+    const { createSeguimiento, errors, statusSuccess } = useContext(SeguimientoContext) 
     const { register, handleSubmit } = useForm()
 
-    // Función encargada de enviar los datos ingresados en el formulario al backend
     const submitSeguimiento = handleSubmit(async (values) => {
-
         values.id = ""
 
-        // Uso de la función creada en status.js 
-        const res = await createSeguimientoRequest(values)
-
-        // Uso del reducer addSeguimiento proveniente de seguimientoSlice.js
-        // Envío del contenido de la respuesta 
-        dispatch(addSeguimiento(res))
+        // LLamada a createSeguimiento del contexto
+        await createSeguimiento(values)
     })
     
     return (
@@ -50,6 +43,10 @@ const FormSeguimiento = () => {
                 
                 <button>Enviar</button>
             </form>
+            {
+                errors.length > 0 ? <div>{errors}</div>
+                : statusSuccess.length > 0 && <div>{statusSuccess}</div>
+            }
         </>
     )
 }
