@@ -117,7 +117,7 @@ async def put_seguimiento_deadline(id: str, seguimiento: SeguimientoDeadLine):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error al actualizar fecha de entrega: {str(e)}"
-        )    
+        )
 
 
 # DELETE

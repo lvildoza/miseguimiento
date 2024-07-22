@@ -1,7 +1,6 @@
 from pydantic import BaseModel, Field
 from datetime import datetime
 
-
 class Seguimiento(BaseModel):
     id: str = None
     initial_date: datetime = Field(default_factory=datetime.now)
