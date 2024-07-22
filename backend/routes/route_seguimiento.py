@@ -99,6 +99,28 @@ async def update_seguimiento(id: str, seguimiento: Seguimiento):
             detail=f"Error al actualizar el seguimiento: {str(e)}"
         )
 
+
+# PUT DeadLine
+@seguimiento.put("/seguimiento/{id}/deadline")
+async def put_seguimiento_deadline(id: str, seguimiento: SeguimientoDeadLine):
+    try:
+        result = collection_name.update_one({"id": id}, {"$set": jsonable_encoder(seguimiento)})
+        if result.matched_count == 0:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"No se encontró el seguimiento con id {id}"
+            )
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={"message": "Fecha de entrega modificada exitosamente"}
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error al actualizar fecha de entrega: {str(e)}"
+        )    
+
+
 # DELETE
 @seguimiento.delete("/seguimiento/{id}", status_code=status.HTTP_200_OK)
 async def delete_seguimiento(id: str):
