@@ -12,7 +12,7 @@ import PropTypes from 'prop-types'
 const EditSeguimiento = ({ editWordsArray, updateType }) => {
 
     const { updateStatus, loadingUpdate } = useContext(StatusContext)
-    const { updateDeadline, loadingUpdateDeadline, statusSuccess } = useContext(SeguimientoContext)
+    const { updateDeadline, loadingUpdateDeadline } = useContext(SeguimientoContext)
     
     const { inputValue, showCard, handleInputChange, handleSearch } = useSeguimientoSearch()
 
@@ -115,7 +115,6 @@ const EditSeguimiento = ({ editWordsArray, updateType }) => {
                                 <span>ID: {updateType === 'status' ? status[0].id : seguimientos[0].id}</span>
                                 <span>{editWordsArray[2]} {updateType === 'status' ? status[0].product_status : seguimientos[0].product_deadline}</span>
                             </div>
-                            { statusSuccess.length > 0 && <span>{statusSuccess}</span>}
                         </>
                     )
             }

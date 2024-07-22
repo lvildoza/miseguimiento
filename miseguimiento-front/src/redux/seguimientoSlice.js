@@ -19,9 +19,7 @@ const seguimientoSlice = createSlice({
 
         // reducer para obtener un único seguimiento
         getSeguimientoState: (state, action) => {
-
-            // Verificación si lo que se obtiene es un array, si no lo es, por defecto devuelve un array
-            return Array.isArray(action.payload) ? action.payload : [action.payload]
+            return action.payload
         },
 
         // reducer para modificar el estado actual de la fecha de entrega de un producto
