@@ -3,14 +3,21 @@
 # Schema Seguimiento
 def individual_seguimiento(seguimiento) -> dict:
     return {
-        "id": str(seguimiento["id"]),
-        "initial_date": seguimiento["initial_date"],
+        "product_id": str(seguimiento["product_id"]),
+        "product_initial_date": seguimiento["product_initial_date"],
+        "product_client_name": seguimiento["product_client_name"],
         "product_deadline": seguimiento["product_deadline"],
-        "user_name": seguimiento["user_name"],
         "product_description": seguimiento["product_description"],
-        "product_delivery": seguimiento["product_delivery"],
+        "product_delivery_type": seguimiento["product_delivery"],
         "product_status": seguimiento["product_status"]
-    }
+        }
+
+def product_status(productstatus) -> dict:
+    return {
+        "product_status_datetime": productstatus["product_status_datetime"],
+        "product_status_type": productstatus["product_status_type"],
+        "product_description_status": productstatus["product_description_status"]
+        }
 
 # Schema List Seguimiento
 def list_seguimiento(seguimientos) -> list:
@@ -19,8 +26,8 @@ def list_seguimiento(seguimientos) -> list:
 # Schema Status
 def individual_status(status) -> dict:
     return {
-        "id": str(status["id"]),
-        "product_status": status["product_status"],
+        "product_id": str(status["product_id"]),
+        "product_status": status["ProductStatus"]
     }
 
 def list_status(statuses) -> list:
