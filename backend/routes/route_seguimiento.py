@@ -45,7 +45,7 @@ async def get_seguimiento():
 @seguimiento.get("/seguimiento/{id}")
 async def get_seguimiento_by_id(id: str):
     try:
-        seguimiento = collection_name.find_one({"id": id})
+        seguimiento = collection_name.find_one({"product_id": id})
         if not seguimiento:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -63,11 +63,11 @@ async def get_seguimiento_by_id(id: str):
             detail=f"Error al obtener el seguimiento: {str(e)}"
         )
 
-# POST
+# POST --- CHEQUEADO OK!
 @seguimiento.post("/seguimiento", status_code=status.HTTP_201_CREATED)
 async def post_seguimiento(seguimiento: Seguimiento):
     try:
-        seguimiento.id = str(uuid())
+        seguimiento.product_id = str(uuid())
         collection_name.insert_one(jsonable_encoder(seguimiento))
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,

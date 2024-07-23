@@ -1,14 +1,20 @@
 from pydantic import BaseModel
 from datetime import datetime
+from typing import List
+
+class ProductStatus(BaseModel):
+    product_status_datetime: datetime
+    product_status_type: str
+    product_description_status: str
 
 class Seguimiento(BaseModel):
-    id: str = None
-    initial_date: datetime = datetime.now()
+    product_id: str = None
+    product_initial_date: datetime = datetime.now()
+    product_client_name: str
     product_deadline: str
-    user_name: str
     product_description: str
-    product_delivery: str
-    product_status: str = "PENDIENTE"
+    product_delivery_type: str
+    product_status: List[ProductStatus]
 
 class SeguimientoDeadLine(BaseModel):
     product_deadline: str
