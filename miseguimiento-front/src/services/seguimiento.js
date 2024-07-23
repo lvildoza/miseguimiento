@@ -9,6 +9,7 @@ export const createSeguimientoRequest = async (seguimiento) => {
         return response.data
     } catch (error) {
         console.error(error)
+        throw error
     }
 }
 
@@ -31,7 +32,7 @@ export const getSeguimientoRequest = async (id) => {
         console.log(response.data)
         return response.data
     } catch (error) {
-        console.error(error)
+        console.error(error.response.data)
         throw error
     }
 }
@@ -51,7 +52,8 @@ export const putDeadlineRequest = async (id, deadline) => {
 // Solicitud DELETE para borrar un seguimiento de la base de datos
 export const deleteSeguimientoRequest = async (id) => {
     try {
-        await axios.delete(`${API_BASE_URL}/seguimiento/${id}`)
+        const response = await axios.delete(`${API_BASE_URL}/seguimiento/${id}`)
+        return response.data
     } catch (error) {
         console.error(error)
         throw error

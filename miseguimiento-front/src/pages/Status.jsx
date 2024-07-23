@@ -6,7 +6,7 @@ import { useSelector } from "react-redux"
 
 const Status = () => {
 
-    const { getStatus, loading } = useContext(StatusContext)
+    const { getStatus, loadingSearch } = useContext(StatusContext)
     const { statusid } = useParams() // Obtener el parametro statusid desde la URL /status/:statusid
     const status = useSelector(state => state.status) // Uso del estado status desde store.js
 
@@ -17,9 +17,14 @@ const Status = () => {
 
     return (
         <div>
-            { loading && <div>Loading...</div> }
-            <h3>Tu producto y/o servicio se encuentra en estado:</h3>
-            <StatusSegumiento statusString={status[0].product_status} />
+            {loadingSearch ? <div>Loading...</div>
+                : (
+                    <>
+                        <h3>Tu producto y/o servicio se encuentra en estado:</h3>
+                        <StatusSegumiento statusString={status.product_status} />
+                    </>
+                )
+            }
         </div>
     )
 }
