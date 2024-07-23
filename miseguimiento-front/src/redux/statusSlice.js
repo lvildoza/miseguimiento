@@ -10,7 +10,7 @@ const statusSlice = createSlice({
     reducers: {
         // reducer que reemplaza el estado actual con el payload de la acción
         getStatusById: (state, action) => {
-        return action.payload
+        return Array.isArray(action.payload) ? action.payload : [action.payload]
         },
 
         // reducer para modificar el estado del seguimiento de un producto

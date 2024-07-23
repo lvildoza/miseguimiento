@@ -7,7 +7,7 @@ const CardStatusAndDeadline = () => {
 
     // Llamada al estado loadingSearch para mostrar mientras se realiza la solicitud GET
     const { loadingSearch } = useContext(StatusContext)
-    const { loadingSearch: loaderSearchDeadline } = useContext(SeguimientoContext)
+    const { loadingSearch: loaderSearchDeadline, errors } = useContext(SeguimientoContext)
     
     // Uso de los estados status y seguimientos del store.js de redux
     const status = useSelector(state => state.status)
@@ -33,7 +33,7 @@ const CardStatusAndDeadline = () => {
                             <br />
                         </>
                     )
-                        : loaderSearchDeadline ? <div>Loading...</div>
+                        : loaderSearchDeadline && errors.length === 0 ? <div>Loading...</div>
                             
                             // Renderizado de JSX si isInEditStatusPath es false
                             : !isInEditStatusPath && seguimiento[0] ? (
@@ -45,7 +45,7 @@ const CardStatusAndDeadline = () => {
                                     </div>
                                 </>
                             )
-                                :<span>No se encontró el número de seguimiento</span>
+                                : errors.length > 0 && <span>{errors}</span>
             }
         </div>
     )
