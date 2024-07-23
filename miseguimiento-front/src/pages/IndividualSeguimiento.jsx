@@ -13,7 +13,7 @@ const IndividualSeguimiento = () => {
             <div>
                 <input
                     type="text"
-                    value={inputValue.toLowerCase().trim()}
+                    value={inputValue.toLowerCase().trimStart()}
                     onChange={handleInputChange} />
                 <button onClick={() => handleSearch(inputValue.length > 0)}>Buscar</button>
             </div>

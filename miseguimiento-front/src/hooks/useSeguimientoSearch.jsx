@@ -5,8 +5,8 @@ import { useLocation } from "react-router-dom"
 // Custom hook para reutilizar funciones de buscador de seguimiento por id
 const useSeguimientoSearch = () => {
     
-    const { getSeguimiento } = useContext(SeguimientoContext)
-    const { getStatus } = useContext(StatusContext)
+    const { getSeguimiento, setErrors } = useContext(SeguimientoContext)
+    const { getStatus, setErrors: setStatusErrors } = useContext(StatusContext)
 
     const location = useLocation()
     const isInSearchSeguimientoPath = location.pathname === '/search-seguimiento'
@@ -25,10 +25,15 @@ const useSeguimientoSearch = () => {
     // Función para realizar la búsqueda del seguimiento
     const handleSearch = (value) => {
 
+        // Vaciar estados para evitar problemas en renderizados en los componentes
+        setErrors([])
+        setStatusErrors([])
+
         // Llamada a getSeguimiento o getStatus solo si el input tiene un valor
-        value &&
-            isInSearchSeguimientoPath || isInDeleteSeguimientoPath || isInEditDeadlinePath ? getSeguimiento(inputValue.trim()) && setShowCard(true)
-            : value && getStatus(inputValue.trim()) && setShowCard(true)
+        if (!value) return
+        
+        isInSearchSeguimientoPath || isInDeleteSeguimientoPath || isInEditDeadlinePath ? getSeguimiento(inputValue.trim()) && setShowCard(true)
+            : getStatus(inputValue.trim()) && setShowCard(true)
     }
     
     return {

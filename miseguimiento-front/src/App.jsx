@@ -17,7 +17,7 @@ function App() {
         
           <Routes>
             <Route path="/seguimientos" element={<Seguimientos />} />
-            <Route path="/status/:statusid" element={<Status />} />
+            <Route path="/search-status" element={<Status />} />
             <Route path="/search-seguimiento" element={<IndividualSeguimiento />} />
             <Route path="/create-seguimiento" element={<FormSeguimiento />} />
             <Route path="/edit-status" element={<EditStatusPage />} />

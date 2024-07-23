@@ -6,8 +6,8 @@ import { useLocation } from "react-router-dom"
 const CardStatusAndDeadline = () => {
 
     // Llamada al estado loadingSearch para mostrar mientras se realiza la solicitud GET
-    const { loadingSearch } = useContext(StatusContext)
-    const { loadingSearch: loaderSearchDeadline, errors, statusSuccess } = useContext(SeguimientoContext)
+    const { loadingSearch, errors: statusErrors } = useContext(StatusContext)
+    const { loadingSearch: loaderSearchDeadline, errors } = useContext(SeguimientoContext)
     
     // Uso de los estados status y seguimientos del store.js de redux
     const status = useSelector(state => state.status)
@@ -23,7 +23,7 @@ const CardStatusAndDeadline = () => {
                 loadingSearch ? <div>Loading...</div> 
                     
                     // Renderizado de JSX si isInEditStatusPath es true
-                    : isInEditStatusPath && status[0] ? (
+                    : isInEditStatusPath && status[0] && statusErrors.length === 0 ? (
                         <>
                             <label>Estado actual:</label>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px'}}>
@@ -33,7 +33,8 @@ const CardStatusAndDeadline = () => {
                             <br />
                         </>
                     )
-                        : loaderSearchDeadline && errors.length === 0 ? <div>Loading...</div>
+                        : statusErrors.length > 0 ? <span>{statusErrors}</span>
+                        : loaderSearchDeadline ? <div>Loading...</div>
                             
                             // Renderizado de JSX si isInEditStatusPath es false
                             : !isInEditStatusPath && seguimiento[0] && errors.length === 0 ? (
@@ -45,7 +46,7 @@ const CardStatusAndDeadline = () => {
                                     </div>
                                 </>
                             )
-                                : <span>{errors}</span>
+                                : errors.length > 0 && <span>{errors}</span>
             }
         </div>
     )

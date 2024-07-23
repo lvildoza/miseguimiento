@@ -11,8 +11,8 @@ import PropTypes from 'prop-types'
 // updateType son 2 string -> "status" y "deadline", dependiendo del componente en que se envía la prop, se ejecutan acciones y renderizados diferentes
 const EditSeguimiento = ({ editWordsArray, updateType }) => {
 
-    const { updateStatus, loadingUpdate } = useContext(StatusContext)
-    const { updateDeadline, loadingUpdateDeadline, statusSuccess } = useContext(SeguimientoContext)
+    const { updateStatus, loadingUpdate, errors: statusErrors, statusSuccess: productStatusSuccess } = useContext(StatusContext)
+    const { updateDeadline, loadingUpdateDeadline, errors, statusSuccess } = useContext(SeguimientoContext)
     
     const { inputValue, showCard, handleInputChange, handleSearch } = useSeguimientoSearch()
 
@@ -115,7 +115,14 @@ const EditSeguimiento = ({ editWordsArray, updateType }) => {
                                 <span>ID: {updateType === 'status' ? status[0].id : seguimientos[0].id}</span>
                                 <span>{editWordsArray[2]} {updateType === 'status' ? status[0].product_status : seguimientos[0].product_deadline}</span>
                             </div>
-                            { statusSuccess.length > 0 && <span>{statusSuccess}</span>}
+
+                            {/* Renderizado de mensajes de error o estado 200 dependiendo cuál es el valor de updateType */}
+                            { 
+                                updateType === 'deadline' && errors.length > 0 ? <span>{errors}</span>
+                                    : updateType === 'deadline' && statusSuccess.length > 0 ? <span>{statusSuccess}</span>
+                                        : updateType === 'status' && statusErrors.length > 0 ? <span>{statusErrors}</span>
+                                            : updateType === 'status' && productStatusSuccess.length > 0 && <span>{productStatusSuccess}</span>
+                            }
                         </>
                     )
             }

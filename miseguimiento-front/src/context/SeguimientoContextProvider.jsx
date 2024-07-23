@@ -16,20 +16,14 @@ const SeguimientoContextProvider = ({ children }) => {
     const [loadingUpdateDeadline, setLoadingUpdateDeadline] = useState(false)
 
     useEffect(() => {
-        if (errors.length > 0) {
-            const timeout = setTimeout(() => {
-                setErrors([])
-            }, 3000)
-            
-            return () => clearTimeout(timeout)
-        } else if (statusSuccess.length > 0) {
+        if (statusSuccess.length > 0) {
             const timeout = setTimeout(() => {
                 setStatusSuccess([])
             }, 3000)
         
             return () => clearTimeout(timeout)
         }
-    }, [errors, statusSuccess])
+    }, [statusSuccess])
 
     // Función para obtener todos los seguimientos existentes
     const getAllSeguimientos = async () => {
@@ -83,9 +77,11 @@ const SeguimientoContextProvider = ({ children }) => {
                 dispatch(editDeadline(res))
                 setStatusSuccess(res.message)
                 await getSeguimiento(id)
+                setLoadingUpdateDeadline(false)
             } 
         } catch (error) {
             setErrors(error.response.data.detail)
+            setLoadingUpdateDeadline(false)
         }
     }
 
@@ -93,8 +89,8 @@ const SeguimientoContextProvider = ({ children }) => {
     const deleteSeguimiento = async (id) => {
         try {
             const res = await deleteSeguimientoRequest(id)
-            dispatch(removeSeguimiento({ id }))
             setStatusSuccess(res.message)
+            dispatch(removeSeguimiento({ id }))
         } catch (error) {
             setErrors(error.response.data.detail)
         }
@@ -103,7 +99,9 @@ const SeguimientoContextProvider = ({ children }) => {
     return (
         <SeguimientoContext.Provider value={{
             errors,
+            setErrors,
             statusSuccess,
+            setStatusSuccess,
             loading,
             loadingSearch,
             loadingUpdateDeadline,

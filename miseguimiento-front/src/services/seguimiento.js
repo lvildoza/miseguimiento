@@ -53,6 +53,7 @@ export const putDeadlineRequest = async (id, deadline) => {
 export const deleteSeguimientoRequest = async (id) => {
     try {
         const response = await axios.delete(`${API_BASE_URL}/seguimiento/${id}`)
+        console.log(response.data)
         return response.data
     } catch (error) {
         console.error(error)

@@ -1,4 +1,4 @@
-import { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import { SeguimientoContext } from "../context/Context.jsx"
 import { useSelector } from "react-redux"
 import { formattedDate } from "../utilities/formattedDate.js"
@@ -10,7 +10,6 @@ const CardSeguimiento = ({ isInDeleteSeguimientoPath }) => {
     const { loadingSearch, errors, deleteSeguimiento, statusSuccess } = useContext(SeguimientoContext)
     // Uso del estado seguimientos desde store.js
     const seguimientos = useSelector(state => state.seguimientos)
-
     let seguimiento = seguimientos[0]
 
     return (
@@ -29,11 +28,12 @@ const CardSeguimiento = ({ isInDeleteSeguimientoPath }) => {
                         {isInDeleteSeguimientoPath && !loadingSearch && (
                             <div>
                                 <button onClick={() => deleteSeguimiento(seguimiento.id)}>Eliminar</button>
+                                
                             </div>
                         )}
                     </div>
                 )
-                    : errors.length > 0 ? <div>{errors}</div>
+                    : errors.length > 0 ? <div> {errors}</div>
                         : statusSuccess.length > 0 && <div>{statusSuccess}</div>
             }
 
