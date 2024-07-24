@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
-from models.status import Status
-from schema.schemas import list_status, list_status_byDateTime
+from models.model_status import Status, ProductStatus
+from schema.schema_status import list_status
 from config.database import collection_name
 from bson import ObjectId
 
@@ -39,52 +39,36 @@ async def get_status():
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error al obtener los estados: {str(e)}"
         )
-
-# GET By Date Time
-@status_router.get("/status/datetime")
-async def get_status_byDateTime():
+    
+# GET: para listar estados por product_id
+@status_router.get("/status/{product_id}")
+async def get_status_by_product_id(product_id: str):
     try:
-        status_byDateTime = list_status_byDateTime(collection_name.find())
-        if not status_byDateTime:
+        product = collection_name.find_one({"product_id": product_id}, {"_id": 0, "product_id": 1, "product_status": 1})
+        if not product:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail="No se encontraron estados por fecha y hora"
+                detail=f"No se encontró el producto con id {product_id}"
             )
+        
+        # Ordenar el array product_status por product_status_datetime en orden descendente
+        product["product_status"] = sorted(product["product_status"], key=lambda x: x["product_status_datetime"], reverse=True)
+
         return JSONResponse(
             status_code=status.HTTP_200_OK,
-            content=jsonable_encoder(status_byDateTime, custom_encoder={ObjectId: convert_objectid})
+            content=jsonable_encoder(product, custom_encoder={ObjectId: convert_objectid})
         )
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error al obtener los estados por fecha y hora: {str(e)}"
-        )
-
-# GET By Id
-@status_router.get("/status/{id}")
-async def get_statusById(id: str):
-    try:
-        get_status_byid = collection_name.find_one({"id": id})
-        if not get_status_byid:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"No se encontró el estado con id {id}"
-            )
-        return JSONResponse(
-            status_code=status.HTTP_200_OK,
-            content=jsonable_encoder(get_status_byid, custom_encoder={ObjectId: convert_objectid})
-        )
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error al obtener el estado: {str(e)}"
+            detail=f"Error al obtener los estados: {str(e)}"
         )
 
 # PUT
 @status_router.put("/status/{id}")
 async def put_status(id: str, status_data: Status):
     try:
-        result = collection_name.find_one_and_update({"id": id}, {"$set": jsonable_encoder(status_data)})
+        result = collection_name.find_one_and_update({"product_id": id}, {"$set": jsonable_encoder(status_data)})
         if not result:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -99,3 +83,16 @@ async def put_status(id: str, status_data: Status):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error al modificar el estado: {str(e)}"
         )
+    
+
+# POST: endpoint para agregar un nuevo estado
+@status_router.post("/add_status/{product_id}")
+async def add_status(product_id: str, status: ProductStatus):
+    result = collection_name.update_one(
+        {"product_id": product_id},
+        {"$push": {"product_status": status.dict()}}
+    )
+    if result.modified_count == 1:
+        return {"message": "Estado agregado exitosamente"}
+    else:
+        raise HTTPException(status_code=404, detail="Producto no encontrado")
