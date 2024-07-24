@@ -2,11 +2,10 @@ from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from uuid import uuid4 as uuid
-from models.seguimiento import SeguimientoDeadLine, Seguimiento
-from schema.schemas import list_seguimiento
+from models.model_seguimiento import SeguimientoDeadLine, Seguimiento
+from schema.schema_seguimiento import list_seguimiento
 from config.database import collection_name
 from bson import ObjectId
-from datetime import datetime
 
 seguimiento = APIRouter(prefix="/api/v1",
                         tags=["Seguimiento"])
@@ -31,6 +30,10 @@ async def get_seguimiento():
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="No se encontraron seguimientos"
             )
+        
+        # Ordenar los seguimientos por product_initial_date en orden descendente
+        seguimientos = sorted(seguimientos, key=lambda x: x["product_initial_date"], reverse=True)
+
         return JSONResponse(
             status_code=status.HTTP_200_OK,
             content=jsonable_encoder(seguimientos)
@@ -51,6 +54,7 @@ async def get_seguimiento_by_id(id: str):
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"No se encontró el seguimiento con id {id}"
             )
+
         # Convertir ObjectId a cadena
         seguimiento = jsonable_encoder(seguimiento, custom_encoder={ObjectId: convert_objectid})
         return JSONResponse(
@@ -63,7 +67,7 @@ async def get_seguimiento_by_id(id: str):
             detail=f"Error al obtener el seguimiento: {str(e)}"
         )
 
-# POST --- CHEQUEADO OK!
+# POST
 @seguimiento.post("/seguimiento", status_code=status.HTTP_201_CREATED)
 async def post_seguimiento(seguimiento: Seguimiento):
     try:
@@ -83,12 +87,13 @@ async def post_seguimiento(seguimiento: Seguimiento):
 @seguimiento.put("/seguimiento/{id}", status_code=status.HTTP_200_OK)
 async def update_seguimiento(id: str, seguimiento: Seguimiento):
     try:
-        result = collection_name.update_one({"id": id}, {"$set": jsonable_encoder(seguimiento)})
+        result = collection_name.update_one({"product_id": id}, {"$set": jsonable_encoder(seguimiento)})
         if result.matched_count == 0:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"No se encontró el seguimiento con id {id}"
             )
+
         return JSONResponse(
             status_code=status.HTTP_200_OK,
             content={"message": "Seguimiento actualizado exitosamente"}
@@ -104,7 +109,7 @@ async def update_seguimiento(id: str, seguimiento: Seguimiento):
 @seguimiento.put("/seguimiento/{id}/deadline")
 async def put_seguimiento_deadline(id: str, seguimiento: SeguimientoDeadLine):
     try:
-        result = collection_name.update_one({"id": id}, {"$set": jsonable_encoder(seguimiento)})
+        result = collection_name.update_one({"product_id": id}, {"$set": jsonable_encoder(seguimiento)})
         if result.matched_count == 0:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -125,7 +130,7 @@ async def put_seguimiento_deadline(id: str, seguimiento: SeguimientoDeadLine):
 @seguimiento.delete("/seguimiento/{id}", status_code=status.HTTP_200_OK)
 async def delete_seguimiento(id: str):
     try:
-        result = collection_name.delete_one({"id": id})
+        result = collection_name.delete_one({"product_id": id})
         if result.deleted_count == 0:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,

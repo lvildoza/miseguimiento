@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
+from models.model_users import users
 from typing import List
 
 class ProductStatus(BaseModel):
@@ -9,6 +10,7 @@ class ProductStatus(BaseModel):
 
 class Seguimiento(BaseModel):
     product_id: str = None
+    user_id: str = users
     product_initial_date: datetime = datetime.now()
     product_client_name: str
     product_deadline: str
