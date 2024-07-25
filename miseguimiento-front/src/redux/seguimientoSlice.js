@@ -34,7 +34,7 @@ const seguimientoSlice = createSlice({
 
         // reducer para remover un seguimiento en el arreglo
         removeSeguimiento: (state, action) => {
-            return state.filter(seguimiento => seguimiento.id !== action.payload.id)
+            return state.filter(seguimiento => seguimiento.product_id !== action.payload.product_id)
         }
     }
 })

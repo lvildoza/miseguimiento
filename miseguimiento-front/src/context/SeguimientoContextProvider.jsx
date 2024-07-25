@@ -60,8 +60,10 @@ const SeguimientoContextProvider = ({ children }) => {
         try {
             const res = await createSeguimientoRequest(value)
             if (res) {
+                console.log("Datos al crear seguimiento: ", res)
                 dispatch(addSeguimiento(res))
                 setStatusSuccess(res.message)
+                return res; // Retorno de la respuesta con los datos para mostrarlos en FormSeguimiento.jsx
             }
         } catch (error) {
             setErrors(error.response.data.detail)
@@ -90,7 +92,7 @@ const SeguimientoContextProvider = ({ children }) => {
         try {
             const res = await deleteSeguimientoRequest(id)
             setStatusSuccess(res.message)
-            dispatch(removeSeguimiento({ id }))
+            dispatch(removeSeguimiento({ product_id: id }))
         } catch (error) {
             setErrors(error.response.data.detail)
         }

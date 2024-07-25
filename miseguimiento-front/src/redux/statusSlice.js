@@ -13,10 +13,15 @@ const statusSlice = createSlice({
         return Array.isArray(action.payload) ? action.payload : [action.payload] 
         },
 
+        // reducer para crear un estado y agregarlo al array
+        addStatus: (state, action) => {
+            state.push(action.payload)
+        },
+
         // reducer para modificar el estado del seguimiento de un producto
         editStatus: (state, action) => {
-        const index = state.findIndex(status => status.id === action.payload.id)
-            if (index) {
+        const index = state.findIndex(status => status.product_id === action.payload.product_id)
+            if (index !== -1) {
                 state[index] = action.payload
             }
         },
@@ -24,5 +29,5 @@ const statusSlice = createSlice({
 })
 
 // Exportación de los reducers para utilizarlos en componentes
-export const { getStatusById , editStatus } = statusSlice.actions
+export const { getStatusById , addStatus, editStatus } = statusSlice.actions
 export default statusSlice.reducer

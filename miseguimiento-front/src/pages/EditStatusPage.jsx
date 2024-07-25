@@ -6,7 +6,8 @@ const EditStatusPage = () => {
     const editWords = [
         'Seleccione un nuevo estado:',
         'Estado actualizado:',
-        'Nuevo estado:'
+        'Nuevo estado:',
+        'Nueva descripción de estado:'
     ]
 
     return (

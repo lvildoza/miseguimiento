@@ -1,8 +1,7 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext } from "react"
 import { SeguimientoContext } from "../context/Context.jsx"
 import { useSelector } from "react-redux"
 import { formattedDate } from "../utilities/formattedDate.js"
-import StatusSegumiento from "./StatusSegumiento.jsx"
 import PropTypes from 'prop-types'
 
 const CardSeguimiento = ({ isInDeleteSeguimientoPath }) => {
@@ -17,19 +16,20 @@ const CardSeguimiento = ({ isInDeleteSeguimientoPath }) => {
             {loadingSearch ? <div>Loading...</div>
                 : seguimiento && errors.length === 0 ? (
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <span>{formattedDate(seguimiento.initial_date)}</span>
+                        <span>{formattedDate(seguimiento.product_initial_date)}</span>
                         <span>{seguimiento.product_deadline}</span>
-                        <span>{seguimiento.user_name}</span>
+                        <span>{seguimiento.product_client_name}</span>
                         <span>{seguimiento.product_description}</span>
-                        <span>{seguimiento.product_delivery}</span>
-                        
-                        <StatusSegumiento statusString={seguimiento.product_status} />
-
+                        <span>{seguimiento.product_delivery_type}</span>
+                
                         {isInDeleteSeguimientoPath && !loadingSearch && (
-                            <div>
-                                <button onClick={() => deleteSeguimiento(seguimiento.id)}>Eliminar</button>
-                                
-                            </div>
+                            <>
+                                <div>
+                                    <button onClick={() => deleteSeguimiento(seguimiento.product_id)}>Eliminar</button>
+                                    
+                                </div>
+                                {statusSuccess.length > 0 && <div>{statusSuccess}</div>}
+                            </>
                         )}
                     </div>
                 )

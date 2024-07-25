@@ -27,8 +27,9 @@ const CardStatusAndDeadline = () => {
                         <>
                             <label>Estado actual:</label>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px'}}>
-                                <span>ID: {status[0].id}</span>
-                                <span>Estado del producto: {status[0].product_status}</span>
+                                <span>ID: {status[0].product_id}</span>
+                                <span>Estado del producto: {status[0].product_status[0].product_status_type}</span>
+                                <span>Descripción del estado: {status[0].product_status[0].product_description_status}</span>
                             </div>
                             <br />
                         </>
@@ -41,7 +42,7 @@ const CardStatusAndDeadline = () => {
                                 <>
                                     <label>Fecha actual:</label>
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px'}}>
-                                        <span>ID: {seguimiento[0].id}</span>
+                                        <span>ID: {seguimiento[0].product_id}</span>
                                         <span>Fecha estimada de entrega: {seguimiento[0].product_deadline}</span>
                                     </div>
                                 </>

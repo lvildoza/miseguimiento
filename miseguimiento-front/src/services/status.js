@@ -14,6 +14,18 @@ export const getStatusByIdRequest = async (statusId) => {
     }
 }
 
+// Solicitud POST para crear el estado de un producto
+export const createStatusRequest = async (id, status) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/add_status/${id}`, status)
+        console.log(response.data)
+        return response.data
+    } catch (error) {
+        console.error(error)
+        throw error
+    }
+}
+
 // Solicitud PUT para modificar el estado de un seguimiento
 export const putStatusRequest = async (id, status) => {
     try {

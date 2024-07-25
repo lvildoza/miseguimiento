@@ -34,12 +34,27 @@ const EditSeguimiento = ({ editWordsArray, updateType }) => {
                     return
                 }
 
-                // Valor por defecto del campo id
-                newData.id = status[0].id
+                // Valor por defecto del campo product_id
+                newData.product_id = status[0].product_id
+
+                const currentStatus = status[0].product_status
+
+                const newStatus = {
+                    product_status_datetime: new Date().toISOString(),
+                    product_status_type: newData.product_status_type,
+                    product_description_status: newData.product_description_status
+                }
+
                 console.log("Datos a enviar para status:", newData)
 
+                const updatedStatus = [...currentStatus, newStatus]
                 // Llamada a la función updateStatus de StatusContext
-                await updateStatus(newData.id, { id: newData.id, product_status: newData.product_status })
+                await updateStatus(
+                    newData.product_id,
+                    {
+                        product_id: newData.product_id,
+                        product_status: updatedStatus
+                    })
 
             } else if (updateType === 'deadline') {
                 if (!seguimientos || seguimientos.length === 0) {
@@ -48,11 +63,14 @@ const EditSeguimiento = ({ editWordsArray, updateType }) => {
                 }
 
                 // Valor por defecto del campo id
-                newData.id = seguimientos[0].id
+                newData.product_id = seguimientos[0].product_id
                 console.log("Datos a enviar para deadline:", newData)
 
                 // Llamada a la función updateDeadline de SeguimientoContext
-                await updateDeadline(newData.id, { product_deadline: newData.product_deadline })
+                await updateDeadline(newData.product_id,
+                    {
+                        product_deadline: newData.product_deadline
+                    })
             }
             
             setShowNewCard(true)
@@ -84,19 +102,30 @@ const EditSeguimiento = ({ editWordsArray, updateType }) => {
                 {
                     // JSX a mostrar en el componente <EditStatusPage /> 
                     updateType === "status" ? (
-                        <select {...register("product_status")}>
-                            <option value="">Selecciona un estado</option>
-                            <option value="PENDIENTE">PENDIENTE</option>
-                            <option value="PRODUCCIÓN">PRODUCCIÓN</option>
-                            <option value="RETIRAR">RETIRAR</option>
-                            <option value="ENTREGADO">ENTREGADO</option>
-                        </select>
-                    ): 
+                        <div>
+                            <select {...register("product_status_type")}>
+                                <option value="">Selecciona un estado</option>
+                                <option value="PENDIENTE">PENDIENTE</option>
+                                <option value="CONFIRMADO">CONFIRMADO</option>
+                                <option value="PREPARADO">PREPARADO</option>
+                                <option value="ENVIADO">ENVIADO</option>
+                                <option value="ENTREGADO">ENTREGADO</option>
+                            </select>
+
+                            <input
+                                type="text"
+                                {...register("product_description_status")}
+                                name="product_description_status"
+                                id="input_field"
+                            />
+                        </div>
+                    ) : updateType === 'deadline' &&
+                        
                         // JSX a mostrar en el componente <EditDeadlinePage />
                         <input
                             type="text"
-                            {...register(updateType === "status" ? "product_status" : "product_deadline")}
-                            name={updateType === "status" ? "product_status" : "product_deadline"}
+                            {...register("product_deadline")}
+                            name="product_deadline"
                             id="input-field"
                         />
                     
@@ -112,8 +141,9 @@ const EditSeguimiento = ({ editWordsArray, updateType }) => {
                         <>
                             <label>{editWordsArray[1]}</label>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px'}}>
-                                <span>ID: {updateType === 'status' ? status[0].id : seguimientos[0].id}</span>
-                                <span>{editWordsArray[2]} {updateType === 'status' ? status[0].product_status : seguimientos[0].product_deadline}</span>
+                                <span>ID: {updateType === 'deadline' ? seguimientos[0].product_id : status[0].product_id}</span>
+                                <span>{editWordsArray[2]} {updateType === 'status' ? status[0].product_status[0].product_status_type : seguimientos[0].product_deadline}</span>
+                                {updateType === 'status' && <span>{editWordsArray[3]} {status[0].product_status[0].product_description_status}</span>}
                             </div>
 
                             {/* Renderizado de mensajes de error o estado 200 dependiendo cuál es el valor de updateType */}

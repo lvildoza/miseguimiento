@@ -1,6 +1,7 @@
 import { useContext, useEffect } from "react"
 import { SeguimientoContext } from "../context/Context.jsx"
 import { useSelector } from "react-redux"
+import { formattedDate } from '../utilities/formattedDate.js'
 
 
 const TableSeguimientos = () => {
@@ -26,9 +27,9 @@ const TableSeguimientos = () => {
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>ESTADO</th>
-                                        <th>FECHA DE ENTREGA</th>
+                                        <th>FECHA INICIAL</th>
                                         <th>CLIENTE</th>
+                                        <th>FECHA DE ENTREGA</th>
                                         <th>DETALLE</th>
                                         <th>TIPO DE ENTREGA</th>
                                     </tr>
@@ -36,14 +37,14 @@ const TableSeguimientos = () => {
                                 <tbody>
                                     {
                                         // Mapeo de cada seguimiento en cada fila, y cada campo en su columna correspondiente
-                                        seguimiento.map(seg => (
-                                            <tr key={seg.id}>
-                                                <td>{seg.id}</td>
-                                                <td>{seg.product_status}</td>
+                                        seguimiento.map((seg, index) => (
+                                            <tr key={index}>
+                                                <td>{seg.product_id}</td>
+                                                <td>{formattedDate(seg.product_initial_date)}</td>
+                                                <td>{seg.product_client_name}</td>
                                                 <td>{seg.product_deadline}</td>
-                                                <td>{seg.user_name}</td>
                                                 <td>{seg.product_description}</td>
-                                                <td>{seg.product_delivery}</td>
+                                                <td>{seg.product_delivery_type}</td>
                                             </tr>
                                         ))
                                     }

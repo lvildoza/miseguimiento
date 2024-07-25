@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
 import { StatusContext } from "./Context.jsx"
-import { getStatusByIdRequest } from "../services/status.js"
+import { createStatusRequest, getStatusByIdRequest } from "../services/status.js"
 import { useDispatch } from "react-redux"
-import { getStatusById } from "../redux/statusSlice.js"
+import { addStatus, getStatusById } from "../redux/statusSlice.js"
 import { putStatusRequest } from "../services/status.js"
 import { editStatus } from "../redux/statusSlice.js"
 import PropTypes from 'prop-types'
@@ -42,6 +42,20 @@ const StatusContextProvider = ({ children }) => {
         }
     }
 
+    // Crear un estado por id
+    const createStatus = async (statusId, status) => {
+        try {
+            const res = await createStatusRequest(statusId, status)
+            if (res) {
+                dispatch(addStatus(res))
+                setErrors([])
+                setStatusSuccess(res.message)
+            }
+        } catch (error) {
+            setErrors(error.response.data.detail)
+        }
+    }
+
     const updateStatus = async (statusId, status) => {
         setLoadingUpdate(true)
         try {
@@ -66,6 +80,7 @@ const StatusContextProvider = ({ children }) => {
             loadingSearch,
             loadingUpdate,
             getStatus,
+            createStatus,
             updateStatus
         }}>
             {children}
