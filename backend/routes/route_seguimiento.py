@@ -2,7 +2,8 @@ from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from uuid import uuid4 as uuid
-from models.model_seguimiento import SeguimientoDeadLine, Seguimiento
+from typing import Union
+from models.model_seguimiento import SeguimientoDeadLine, Seguimiento, SeguimientoPost
 from schema.schema_seguimiento import list_seguimiento
 from config.database import collection_name
 from bson import ObjectId
@@ -69,7 +70,7 @@ async def get_seguimiento_by_id(id: str):
 
 # POST
 @seguimiento.post("/seguimiento", status_code=status.HTTP_201_CREATED)
-async def post_seguimiento(seguimiento: Seguimiento):
+async def post_seguimiento(seguimiento: SeguimientoPost):
     try:
         seguimiento.product_id = str(uuid())
         collection_name.insert_one(jsonable_encoder(seguimiento))
