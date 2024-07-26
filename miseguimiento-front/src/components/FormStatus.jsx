@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react"
+import { useContext } from "react"
 import { StatusContext } from "../context/Context.jsx"
 import { useForm } from "react-hook-form"
 import useSeguimientoSearch from "../hooks/useSeguimientoSearch.jsx"
@@ -59,12 +59,17 @@ const FormStatus = () => {
                 }
                 {
                     loadingSearch ? <div>Loading...</div>
-                        : status.length > 0 && (
+                        
+                        : status.length > 0 &&
+                        status[0].product_status &&
+                        status[0].product_status.length > 0 && (
+
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                                 <span>{formattedDate(status[0].product_status[0].product_status_datetime)}</span>
                                 <span>{status[0].product_status[0].product_status_type}</span>
                                 <span>{status[0].product_status[0].product_description_status}</span>
                             </div>
+
                         )
                 }
             </div>
