@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from uuid import uuid4 as uuid
 from models.model_seguimiento import SeguimientoDeadLine, Seguimiento, SeguimientoPost
+from models.model_seguimiento import SeguimientoDeadLine, Seguimiento, SeguimientoPost
 from schema.schema_seguimiento import list_seguimiento
 from config.database import collection_name
 
@@ -123,7 +124,7 @@ async def post_seguimiento(seguimiento: SeguimientoPost, token: str = Depends(oa
         collection_name.insert_one(jsonable_encoder(seguimiento))
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,
-            content={"message": "Seguimiento registrado exitosamente"}
+            content={"message": "Seguimiento registrado exitosamente", "product_id": seguimiento.product_id}
         )
     except Exception as e:
         raise HTTPException(
