@@ -1,10 +1,15 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Depends
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from passlib.context import CryptContext
+from bson import ObjectId
 from models.model_status import Status, ProductStatus
+from models.model_users import Users
 from schema.schema_status import list_status
 from config.database import collection_name
-from bson import ObjectId
+from config.database import usercollection_name
+
 
 status_router = APIRouter(prefix="/api/v1",
                           tags=["Status"],
@@ -15,6 +20,36 @@ def convert_objectid(obj):
     if isinstance(obj, ObjectId):
         return str(obj)
     raise TypeError(f"Type {type(obj)} not serializable")
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/token")
+
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
+
+def get_user(username: str):
+    user = usercollection_name.find_one({"user_name": username})
+    if user:
+        return Users(**user)
+    return None
+
+def authenticate_user(username: str, password: str):
+    user = get_user(username)
+    if not user or not verify_password(password, user.user_password):
+        return False
+    return user
+
+@status_router.post("/token")
+def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    user = authenticate_user(form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    return {"access_token": user.user_name, "token_type": "bearer"}
 
 ###################################
 # Request Method Endpoint "Status"#
@@ -87,7 +122,7 @@ async def put_status(id: str, status_data: Status):
 
 # POST: endpoint para agregar un nuevo estado
 @status_router.post("/add_status/{product_id}")
-async def add_status(product_id: str, status: ProductStatus):
+async def add_status(product_id: str, status: ProductStatus, token: str = Depends(oauth2_scheme)):
     result = collection_name.update_one(
         {"product_id": product_id},
         {"$push": {"product_status": status.dict()}}

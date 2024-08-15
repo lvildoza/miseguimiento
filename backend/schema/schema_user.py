@@ -5,8 +5,8 @@ def individual_user(user) -> dict:
         "user_first_name": user["user_first_name"],
         "user_last_name": user["user_last_name"],
         "user_mail": user["user_mail"],
+        "user_name": user["user_name"],
         "user_password": user["user_password"],
-        "product_delivery_type": user["product_delivery"],
         "user_contact": user["user_contact"]
         }
 

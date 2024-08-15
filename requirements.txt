@@ -3,14 +3,5 @@ python-dotenv
 uvicorn
 requests
 pymongo
-pip
-asgiref
-cffi
-click
-cryptography
-h11
-pycparser
-pydantic
-PyJWT
-starlette
-typing-extensions
+passlib
+bcrypt==4.0.1

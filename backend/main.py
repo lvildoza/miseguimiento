@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from routes.route_user import user_router
 from routes.route_seguimiento import seguimiento
 from routes.route_status import status_router
+from routes.route_test import test
 
 
 app = FastAPI()
@@ -21,5 +23,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(user_router)
 app.include_router(status_router)
 app.include_router(seguimiento)
+app.include_router(test)
