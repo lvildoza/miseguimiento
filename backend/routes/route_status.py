@@ -1,14 +1,17 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from passlib.context import CryptContext
 from bson import ObjectId
 from models.model_status import Status, ProductStatus
-from models.model_users import Users
 from schema.schema_status import list_status
 from config.database import collection_name
+
+# Requirements login
+from fastapi import Depends
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from passlib.context import CryptContext
 from config.database import usercollection_name
+from models.model_users import Users
 
 
 status_router = APIRouter(prefix="/api/v1",
@@ -20,6 +23,10 @@ def convert_objectid(obj):
     if isinstance(obj, ObjectId):
         return str(obj)
     raise TypeError(f"Type {type(obj)} not serializable")
+
+###################################
+############## Login ##############
+###################################
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -57,7 +64,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
 
 # GET
 @status_router.get("/status")
-async def get_status():
+async def get_status(token: str = Depends(oauth2_scheme)):
     try:
         statuses = list_status(collection_name.find())
         if not statuses:
@@ -101,7 +108,7 @@ async def get_status_by_product_id(product_id: str):
 
 # PUT
 @status_router.put("/status/{id}")
-async def put_status(id: str, status_data: Status):
+async def put_status(id: str, status_data: Status, token: str = Depends(oauth2_scheme)):
     try:
         result = collection_name.find_one_and_update({"product_id": id}, {"$set": jsonable_encoder(status_data)})
         if not result:
