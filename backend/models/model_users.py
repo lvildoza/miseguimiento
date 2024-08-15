@@ -16,3 +16,7 @@ class users(BaseModel):
     user_mail: str
     user_password: str
     user_contact: List[UserContact]
+
+class UserLogin(BaseModel):
+    user_password: str
+    user_alias: str
