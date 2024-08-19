@@ -21,7 +21,6 @@ class Users(BaseModel):
     user_password: str
     user_contact: List[UserContact] = Field(default_factory=list)
 
-    @validator('user_password', pre=True, always=True)
-    def hash_password(cls, v):
-        return pwd_context.hash(v)
-
+@validator('user_password', pre=True, always=True)
+def hash_password(user_password):
+    return pwd_context.hash(user_password)
