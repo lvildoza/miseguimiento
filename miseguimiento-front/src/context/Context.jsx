@@ -1,5 +1,6 @@
 import { createContext } from "react";
 
-// Creación de contexto para Seguimiento y Status 
+// Creación de contextos 
 export const SeguimientoContext = createContext()
 export const StatusContext = createContext()
+export const AuthContext = createContext()
