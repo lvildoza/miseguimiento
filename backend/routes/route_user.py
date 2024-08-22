@@ -30,7 +30,7 @@ def convert_objectid(obj):
 
 # CREATE: endpoint para agregar un nuevo usuario
 @user_router.post("/users", status_code=status.HTTP_201_CREATED)
-async def post_users(user: Users, token: str = Depends(oauth2_scheme)):
+async def post_users(user: Users):
     try:
         user.user_id = str(uuid())
         # Encriptar la contraseña antes de guardar
