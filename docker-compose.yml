@@ -5,6 +5,5 @@ services:
     container_name: App-MiSeguimiento
     build: .
     ports:
-      - 8000:8000
-    depends_on:
+      - 8080:8080
     restart: always
