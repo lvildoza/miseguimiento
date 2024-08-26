@@ -29,7 +29,7 @@ src/config.js
 ### BACKEND ###
 env
 venv
-database.py
+# database.py
 .vscode
 /backend/.config
 /backend/check_pass.py
